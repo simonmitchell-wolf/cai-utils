@@ -4,9 +4,11 @@
 
 Allows for dynamic construction of CCAI Platform-compatible payloads to render chat buttons. Intended to be run as a Cloud Function and called from a standard Dialogflow CX webhook. **Function returns a fulfillment message, so it will directly render the buttons without requiring an additional payload to be set in Dialogflow.**
 
-This can be helpful for cases when it's desirable to present multiple buttons to a user but the number of buttons is dynamic or dependent on other logic or data. Because custom payloads can't be used in concert with conditional responses, the alternative in these cases in to build out (and maintain) a bunch of conditional routes and/or pages to render any possible number of buttons. This can work but it adds a lot of complexity and overhead.
+## Problems Solved
 
-Another problem area is re-rendering buttons for parameter reprompting. A hardcoded payload has to be recreated in each reprompt route while a webhook call can be configured once and then just recalled in any route in the scope.
+1. This can be helpful for cases when it's desirable to present multiple buttons to a user but the number of buttons is dynamic or dependent on other logic or data. Because custom payloads can't be used in concert with conditional responses, the alternative in these cases in to build out (and maintain) a bunch of conditional routes and/or pages to render any possible number of buttons. This can work but it adds a lot of complexity and overhead.
+
+2. Another problem area is re-rendering buttons for parameter reprompting. A hardcoded payload has to be recreated in each reprompt route while a webhook call can be configured once and then just recalled in any route in the scope.
 
 ## Instructions
 Basic use case in Dialogflow is to set the configuration parameters (see below) in either the initial prompt route of a parameter (if focusing only on entity extraction) or the initial fulfillment of a page (if looking for full intent input). Then enable the webhook wherever you want the buttons and set the `tag` value based on the desired button type. Importantly, it's best to try and null out the config parameters after you're done using the webhook, which is likely on every outgoing route from the page _unless_ you want to intentionally redisplay the same buttons elsewhere.
