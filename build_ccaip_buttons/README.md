@@ -26,9 +26,9 @@ After enabling the webhook on a route, the tag should be set to "inline" or "sti
 ### Simple text buttons
 
 1. Set configuration
-   `buttonsToBuild` = ["Oranges", "Tomatoes", "Tortillas"]
-   `buttonsMainTitle` = "Pick a fruit:"
-   `buttonsTitleTemplate` = ""
+   - `buttonsToBuild` = ["Oranges", "Tomatoes", "Tortillas"]
+   - `buttonsMainTitle` = "Pick a fruit:"
+   - `buttonsTitleTemplate` = ""
 2. Enable webhook
 3. Set tag to "inline"
 4. Button payload looks like:
@@ -59,9 +59,9 @@ After enabling the webhook on a route, the tag should be set to "inline" or "sti
 ### Buttons from more complex list
 
 1. Set configuration
-   `buttonsToBuild` = [{"name": "Jeff", "city": "Townsville"}, {"name": "Tristán", "city": "Trenton"}, {"name": "Ayesha", "city": Cityburg"}]
-   `buttonsMainTitle` = "Who would you like to meet?"
-   `buttonsTitleTemplate` = "{name} in {city}"
+   - `buttonsToBuild` = [{"name": "Jeff", "city": "Townsville"}, {"name": "Tristán", "city": "Trenton"}, {"name": "Ayesha", "city": Cityburg"}]
+   - `buttonsMainTitle` = "Who would you like to meet?"
+   - `buttonsTitleTemplate` = "{name} in {city}"
 2. Enable webhook
 3. Set tag to "inline"
 4. Button payload looks like:
