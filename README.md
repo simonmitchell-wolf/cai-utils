@@ -1,2 +1,3 @@
-# cai-utils
-Useful functions and scripts for building bots with GCP.
+# CAI Utils
+
+This repository contains a selection of useful functions, scripts, and notebooks for building CAI bots with GCP.
