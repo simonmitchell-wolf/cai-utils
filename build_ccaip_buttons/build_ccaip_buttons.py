@@ -53,15 +53,17 @@ def build_ccaip_buttons(request):
           https://cloud.google.com/dialogflow/cx/docs/reference/rpc/google.cloud.dialogflow.cx.v3#webhookresponse
     """
 
-    # Extract request JSON
+    # Extract request JSON and important mappings
     request_json: dict = request.get_json()
+    fulfillment_info: dict = request_json.get("fulfillmentInfo", {})
+    session_parameters: dict = request_json.get("sessionInfo", {}).get("parameters", {})
 
     # Extract required parameters from request
     try:
-        buttons_type: str = request_json["fulfillmentInfo"]["tag"]
-        main_title: str = request_json["sessionInfo"]["parameters"]["buttonsMainTitle"]
-        buttons_data: list[str | dict] = request_json["sessionInfo"]["parameters"]["buttonsToBuild"]
-        title_template: str = request_json["sessionInfo"]["parameters"].get("buttonsTitleTemplate", None)
+        buttons_type: str = fulfillment_info["tag"]
+        main_title: str = session_parameters["buttonsMainTitle"]
+        buttons_data: list[str] | list[dict] = session_parameters["buttonsToBuild"]
+        title_template: str = session_parameters.get("buttonsTitleTemplate", None)
     except KeyError as exc:
         raise KeyError(f"Missing required parameter: {exc}") from exc
     if title_template is None and any(isinstance(obj, dict) for obj in buttons_data):
@@ -75,7 +77,7 @@ def build_ccaip_buttons(request):
 
         button_title: str = build_button_title(details=obj, template=title_template)
 
-        if "button_action" in obj:
+        if isinstance(obj, dict) and "button_action" in obj:
             button_list.append({"title": button_title, "action": obj["button_action"]})
             continue
 
@@ -85,7 +87,7 @@ def build_ccaip_buttons(request):
     if buttons_type == "inline":
         button_type: str = "inline_button"
     elif buttons_type == "sticky":
-        button_type: str = "sticky_button"
+        button_type = "sticky_button"
 
     # Construct response payload
     response: dict = {
@@ -153,7 +155,7 @@ def build_button_title(
 
     # Process template
     try:
-        title: str = template.format(**details)
+        title = template.format(**details)
     except KeyError as exc:
         raise KeyError("Template key not found in details dictionary.") from exc
 
