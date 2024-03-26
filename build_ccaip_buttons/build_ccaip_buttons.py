@@ -88,6 +88,8 @@ def build_ccaip_buttons(request):
         button_type: str = "inline_button"
     elif buttons_type == "sticky":
         button_type = "sticky_button"
+    else:
+        raise ValueError("Invalid button type. Must be one of {'inline', 'sticky'}.")
 
     # Construct response payload
     response: dict = {
