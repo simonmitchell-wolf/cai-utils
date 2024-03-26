@@ -54,26 +54,26 @@ def build_ccaip_buttons(request):
     """
 
     # Extract request JSON
-    request_json = request.get_json()
+    request_json: dict = request.get_json()
 
     # Extract required parameters from request
     try:
-        buttons_type = request_json["fulfillmentInfo"]["tag"]
-        main_title = request_json["sessionInfo"]["parameters"]["buttonsMainTitle"]
-        buttons_data = request_json["sessionInfo"]["parameters"]["buttonsToBuild"]
-        title_template = request_json["sessionInfo"]["parameters"].get("buttonsTitleTemplate", None)
+        buttons_type: str = request_json["fulfillmentInfo"]["tag"]
+        main_title: str = request_json["sessionInfo"]["parameters"]["buttonsMainTitle"]
+        buttons_data: list[str | dict] = request_json["sessionInfo"]["parameters"]["buttonsToBuild"]
+        title_template: str = request_json["sessionInfo"]["parameters"].get("buttonsTitleTemplate", None)
     except KeyError as exc:
         raise KeyError(f"Missing required parameter: {exc}") from exc
     if title_template is None and any(isinstance(obj, dict) for obj in buttons_data):
         raise KeyError("Template is required when complex details are passed.")
 
     # Initialize button_list
-    button_list = []
+    button_list: list[dict] = []
 
     # Iterate over buttonsToBuild and construct button_list
     for obj in buttons_data:
 
-        button_title = build_button_title(details=obj, template=title_template)
+        button_title: str = build_button_title(details=obj, template=title_template)
 
         if "button_action" in obj:
             button_list.append({"title": button_title, "action": obj["button_action"]})
@@ -83,12 +83,12 @@ def build_ccaip_buttons(request):
 
     # Determine button_type based on tag
     if buttons_type == "inline":
-        button_type = "inline_button"
+        button_type: str = "inline_button"
     elif buttons_type == "sticky":
-        button_type = "sticky_button"
+        button_type: str = "sticky_button"
 
     # Construct response payload
-    response = {
+    response: dict = {
         "fulfillmentResponse": {
             "messages": [
                 {
@@ -142,7 +142,7 @@ def build_button_title(
         'Atlanta, GA'
     """
 
-    title = ""
+    title: str = ""
 
     # Bare strings are passed as buttons are used as the titles
     if isinstance(details, str):
@@ -153,7 +153,7 @@ def build_button_title(
 
     # Process template
     try:
-        title = template.format(**details)
+        title: str = template.format(**details)
     except KeyError as exc:
         raise KeyError("Template key not found in details dictionary.") from exc
 
