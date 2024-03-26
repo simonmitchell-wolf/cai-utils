@@ -59,9 +59,8 @@ def build_ccaip_buttons(request) -> dict:
     # Extract request JSON and important mappings
     request_json: dict = request.get_json()
     fulfillment_info: dict = request_json.get("fulfillmentInfo", {})
-    session_parameters: dict = request_json.get("sessionInfo", {}).get(
-        "parameters", {}
-    )
+    session_info: dict = request_json.get("sessionInfo", {})
+    session_parameters: dict = session_info.get("parameters", {})
 
     # Extract required parameters from request
     try:
