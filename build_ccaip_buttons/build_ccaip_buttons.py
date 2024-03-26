@@ -3,7 +3,7 @@
 from typing import Union
 
 
-def build_ccaip_buttons(request):
+def build_ccaip_buttons(request) -> dict:
     """Builds a CCAI Platform-compatible payload to render chat buttons.
 
     This function takes an HTTP webhook request from Dialogflow CX and constructs a payload
@@ -20,7 +20,8 @@ def build_ccaip_buttons(request):
         response.
 
     Raises:
-        KeyError: If the required parameters are missing from the request.
+        - KeyError: If the required parameters are missing from the request.
+        - ValueError: If an invalid button type is provided.
 
     Notes:
         - The function expects the request to have the following parameters:
