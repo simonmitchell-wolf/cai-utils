@@ -1,7 +1,5 @@
 """Cloud Function for building CCAI Platform-compatible payloads to render chat buttons."""
 
-from typing import Union
-
 
 def build_ccaip_buttons(request) -> dict:
     """Builds a CCAI Platform-compatible payload to render chat buttons.
@@ -114,15 +112,15 @@ def build_ccaip_buttons(request) -> dict:
 
 
 def build_button_title(
-    details: Union[str, dict], template: Union[str, None] = None
+    details: str | dict, template: str | None = None
 ) -> str:
     """Builds the title of a button based on details and an optional template.
 
     Args:
-        details (Union[str, dict]):
+        details (str | dict):
             The details used to build the button title. It can be either a string
             or a dictionary.
-        template (Union[str, None], optional):
+        template (str | None, optional):
             The optional template used to format the button title. Defaults to None.
 
     Returns:
