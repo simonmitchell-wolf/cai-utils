@@ -60,52 +60,28 @@ def build_ccaip_buttons(request) -> dict:
     request_json: dict = request.get_json()
     fulfillment_info: dict = request_json.get("fulfillmentInfo", {})
     session_info: dict = request_json.get("sessionInfo", {})
-    session_parameters: dict = session_info.get("parameters", {})
+    session_params: dict = session_info.get("parameters", {})
 
     # Extract required parameters from request
     try:
-        buttons_type: str = fulfillment_info["tag"]
-        main_title: str = session_parameters["buttonsMainTitle"]
-        buttons_data: list[str] | list[dict] = session_parameters[
-            "buttonsToBuild"
-        ]
-        title_template: str = session_parameters.get(
-            "buttonsTitleTemplate", None
-        )
+        tag: str = fulfillment_info["tag"]
+        main_title: str = session_params["buttonsMainTitle"]
+        buttons_data: list[str] | list[dict] = session_params["buttonsToBuild"]
+        title_template: str = session_params.get("buttonsTitleTemplate", None)
     except KeyError as exc:
         raise KeyError(f"Missing required parameter: {exc}") from exc
-    if title_template is None and any(
-        isinstance(obj, dict) for obj in buttons_data
-    ):
-        raise KeyError("Template is required when complex details are passed.")
 
-    # Initialize button_list
-    button_list: list[dict] = []
-
-    # Iterate over buttonsToBuild and construct button_list
-    for obj in buttons_data:
-
-        button_title: str = build_button_title(
-            details=obj, template=title_template
+    # Check consistency of buttons data type
+    if not is_buttons_data_consistent(buttons_data):
+        raise ValueError(
+            "Buttons data must be a list of either strings or dictionaries."
         )
 
-        if isinstance(obj, dict) and "button_action" in obj:
-            button_list.append(
-                {"title": button_title, "action": obj["button_action"]}
-            )
-            continue
-
-        button_list.append({"title": button_title, "action": "quick_reply"})
+    # Build button_list
+    button_list: list[dict] = build_button_list(buttons_data, title_template)
 
     # Determine button_type based on tag
-    if buttons_type == "inline":
-        button_type: str = "inline_button"
-    elif buttons_type == "sticky":
-        button_type = "sticky_button"
-    else:
-        raise ValueError(
-            "Invalid button type. Must be one of {'inline', 'sticky'}."
-        )
+    button_type: str = build_button_type(tag)
 
     # Construct response payload
     response: dict = {
@@ -126,6 +102,22 @@ def build_ccaip_buttons(request) -> dict:
 
     # Return response as JSON
     return response
+
+
+def is_buttons_data_consistent(buttons_data: list[str] | list[dict]) -> bool:
+    """Validates that the buttons data is consistent.
+    Args:
+        buttons_data: A list of strings or dictionaries representing buttons.
+    Returns:
+        True if all elements are strings or all elements are dictionaries.
+        Otherwise, False.
+    """
+
+    data_is_consistent: bool = all(
+        isinstance(obj, str) for obj in buttons_data
+    ) or all(isinstance(obj, dict) for obj in buttons_data)
+
+    return data_is_consistent
 
 
 def build_button_title(details: str | dict, template: str | None = None) -> str:
@@ -183,3 +175,51 @@ def build_button_title(details: str | dict, template: str | None = None) -> str:
         raise KeyError("Template key not found in details dictionary.") from exc
 
     return title
+
+
+def build_button_list(
+    data: list[str] | list[dict], template: str | None = None
+) -> list[dict]:
+    """Builds a list of button dictionaries based on the data and template.
+    Args:
+        data: A list of strings or dictionaries representing buttons.
+        template (optional): A string suitable for use with str.format().
+            Defaults to None.
+    Returns:
+        A list of dictionaries containing the button title and action.
+    """
+
+    button_list: list[dict] = []
+
+    for obj in data:
+
+        button_title: str = build_button_title(details=obj, template=template)
+
+        button_action: str = "quick_reply"
+        if isinstance(obj, dict) and "button_action" in obj:
+            button_action = obj["button_action"]
+        button: dict = {"title": button_title, "action": button_action}
+        button_list.append(button)
+    return button_list
+
+
+def build_button_type(tag: str) -> str:
+    """Builds the button type based on the tag passed in with the request.
+    Args:
+        tag: The type of buttons to be rendered.
+            One of {'inline','sticky'}.
+    Returns:
+        The type of button to be rendered.
+        One of {'inline_button', 'sticky_button'}.
+    Raises:
+        ValueError: If an invalid button type is provided.
+    """
+    if tag == "inline":
+        button_type: str = "inline_button"
+    elif tag == "sticky":
+        button_type = "sticky_button"
+    else:
+        raise ValueError(
+            "Invalid button type. Must be one of {'inline', 'sticky'}."
+        )
+    return button_type
