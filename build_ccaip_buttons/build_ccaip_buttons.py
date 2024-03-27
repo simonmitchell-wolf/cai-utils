@@ -113,9 +113,9 @@ def is_buttons_data_consistent(buttons_data: list[str] | list[dict]) -> bool:
         Otherwise, False.
     """
 
-    data_is_consistent: bool = all(
-        isinstance(obj, str) for obj in buttons_data
-    ) or all(isinstance(obj, dict) for obj in buttons_data)
+    data_is_consistent: bool = all(isinstance(obj, str) for obj in buttons_data) or all(
+        isinstance(obj, dict) for obj in buttons_data
+    )
 
     return data_is_consistent
 
@@ -164,9 +164,7 @@ def build_button_title(details: str | dict, template: str | None = None) -> str:
         return details
 
     if template is None and isinstance(details, dict):
-        raise ValueError(
-            "Template is required when complex details are passed."
-        )
+        raise ValueError("Template is required when complex details are passed.")
 
     # Process template
     try:
@@ -192,7 +190,6 @@ def build_button_list(
     button_list: list[dict] = []
 
     for obj in data:
-
         button_title: str = build_button_title(details=obj, template=template)
 
         button_action: str = "quick_reply"
@@ -219,7 +216,5 @@ def build_button_type(tag: str) -> str:
     elif tag == "sticky":
         button_type = "sticky_button"
     else:
-        raise ValueError(
-            "Invalid button type. Must be one of {'inline', 'sticky'}."
-        )
+        raise ValueError("Invalid button type. Must be one of {'inline', 'sticky'}.")
     return button_type
