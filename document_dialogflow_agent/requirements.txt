@@ -1,0 +1,4 @@
+dfcx-scrapi==1.10.5
+google-auth==2.30.0
+google-cloud-aiplatform==1.56.0
+outlines==0.0.46
