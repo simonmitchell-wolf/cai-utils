@@ -4,17 +4,6 @@ formatters:
   simple:
     format: "%(asctime)s %(levelname)-8s %(message)s"
     datefmt: "%Y-%m-%dT%H:%M:%S%z"
-  json:
-    (): json_formatter.JSONFormatter
-    fmt_keys:
-      level: levelname
-      message: message
-      timestamp: timestamp
-      logger: name
-      module: module
-      function: funcName
-      line: lineno
-      thread_name: threadName
 handlers:
   stdout:
     class: logging.StreamHandler
@@ -25,19 +14,11 @@ handlers:
     level: WARNING
     formatter: simple
     stream: ext://sys.stderr
-  file:
-    class: logging.handlers.RotatingFileHandler
-    level: DEBUG
-    formatter: json
-    filename: logs/dialogflow_annotator_log.jsonl
-    maxBytes: 10000
-    backupCount: 3
   queue_handler:
     class: logging.handlers.QueueHandler
     handlers:
       - stdout
       - stderr
-      - file
     respect_handler_level: true
 loggers:
   root:
