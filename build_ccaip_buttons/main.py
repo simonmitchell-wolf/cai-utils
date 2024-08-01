@@ -1,10 +1,12 @@
 """Function to build CCAI Platform-compatible button payloads."""
 
+import functions_framework
 
+@functions_framework.http
 def build_ccaip_buttons(request) -> dict:
     """Builds a CCAI Platform-compatible payload to render chat buttons.
 
-    This function takes an HTTP webhook request from Dialogflow CX and
+    This function takes  dan HTTP webhook request from Dialogflow CX and
     constructs a payload containing button information. The payload is designed
     to be compatible with the CCAI (Contact Center AI) Platform and will render
     the buttons on the front end without setting an additional payload in
