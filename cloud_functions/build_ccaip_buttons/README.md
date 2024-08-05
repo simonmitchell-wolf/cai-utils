@@ -1,5 +1,8 @@
 # build_ccaip_buttons.py
 
+> [!NOTE]
+> Function should be accessed via a standard Dialogflow webhook uses the standard webhook response functionality to create a fulfillment message.
+
 ## Functionality
 
 Allows for dynamic construction of CCAI Platform-compatible payloads to render chat buttons. Intended to be run as a Cloud Function and called from a standard Dialogflow CX webhook. **Function returns a fulfillment message, so it will directly render the buttons without requiring an additional payload to be set in Dialogflow.**

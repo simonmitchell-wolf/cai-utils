@@ -1,7 +1,7 @@
 # Extract DFCX Session ID to a Session Parameter
 
 > [!NOTE]
-> Function intended to be accessed via a Standard Dialogflow webhook.
+> Function should be accessed via a standard Dialogflow webhook as it pulls the session ID from the standard webhook request.
 
 ## Functionality
 
