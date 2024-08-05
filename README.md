@@ -38,4 +38,4 @@ When contributing, please create a descriptively named feature branch (e.g., `{l
 
 ### Adding a Cloud Function
 
-To add a cloud function, please refer to the template directory in `/templates/cloud_function`. New functions should have a detailed README, and unit tests to cover the basic functionality of the function.
+To add a cloud function, please refer to the template directory in `/templates/cloud_function`. New functions should have a detailed README that includes documentation of the functionality, problems solved, instructions, and any limitations a user should be aware of. The function directory should also include unit tests to cover basic functionality.
