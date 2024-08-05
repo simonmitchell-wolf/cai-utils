@@ -10,6 +10,7 @@ The repo is structured as follows:
 ```
 .
 ├── archive/
+├── templates/
 ├── notebooks/
 │   ├── notebook_1_name/
 │   │   └── notebook_1_name.ipynb
@@ -30,3 +31,11 @@ The repo is structured as follows:
 │   └── ...
 └── ...
 ```
+
+## Contributing
+
+When contributing, please create a descriptively named feature branch (e.g., `{last-name}/{functionality}`) to use for development and then a pull request to bring your additions into `main` when they're ready.
+
+### Adding a Cloud Function
+
+To add a cloud function, please refer to the template directory in `/templates/cloud_function`. New functions should have a detailed README, and unit tests to cover the basic functionality of the function.
