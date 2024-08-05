@@ -1,10 +1,12 @@
-"""Function to programmatically repeat the last thing the user said."""
+"""Function to build CCAI Platform-compatible button payloads."""
 
+import functions_framework
 
-def repeat_last_user_utterance(request) -> dict:
+@functions_framework.http
+def build_ccaip_buttons(request) -> dict:
     """Builds a CCAI Platform-compatible payload to render chat buttons.
 
-    This function takes an HTTP webhook request from Dialogflow CX and
+    This function takes  dan HTTP webhook request from Dialogflow CX and
     constructs a payload containing button information. The payload is designed
     to be compatible with the CCAI (Contact Center AI) Platform and will render
     the buttons on the front end without setting an additional payload in
@@ -58,7 +60,30 @@ def repeat_last_user_utterance(request) -> dict:
 
     # Extract request JSON and important mappings
     request_json: dict = request.get_json()
-    last_user_utterance: dict = request_json.get("text", "")
+    fulfillment_info: dict = request_json.get("fulfillmentInfo", {})
+    session_info: dict = request_json.get("sessionInfo", {})
+    session_params: dict = session_info.get("parameters", {})
+
+    # Extract required parameters from request
+    try:
+        tag: str = fulfillment_info["tag"]
+        main_title: str = session_params["buttonsMainTitle"]
+        buttons_data: list[str] | list[dict] = session_params["buttonsToBuild"]
+        title_template: str = session_params.get("buttonsTitleTemplate", None)
+    except KeyError as exc:
+        raise KeyError(f"Missing required parameter: {exc}") from exc
+
+    # Check consistency of buttons data type
+    if not is_buttons_data_consistent(buttons_data):
+        raise ValueError(
+            "Buttons data must be a list of either strings or dictionaries."
+        )
+
+    # Build button_list
+    button_list: list[dict] = build_button_list(buttons_data, title_template)
+
+    # Determine button_type based on tag
+    button_type: str = build_button_type(tag)
 
     # Construct response payload
     response: dict = {
