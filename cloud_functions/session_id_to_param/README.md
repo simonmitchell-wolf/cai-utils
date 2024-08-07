@@ -1,5 +1,8 @@
 # Extract DFCX Session ID to a Session Parameter
 
+> [!WARNING]
+> This function is no longer strictly necessary due to the session ID now being available as a [request-scoped parameter](https://cloud.google.com/dialogflow/cx/docs/concept/parameter#request-scoped): `request.session-id`.
+
 > [!NOTE]
 > Function should be accessed via a standard Dialogflow webhook as it pulls the session ID from the standard webhook request.
 
